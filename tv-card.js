@@ -100,6 +100,30 @@ class TVCardServices extends LitElement {
                 "exit": {"key": "EXIT", "icon": "mdi:close"},
             };
         }
+        else if (config.platform === "roku" ) {
+            if (!config.remote_entity) {
+                console.log("Invalid configuration");
+                return;
+            }
+            let remote_entity = config.remote_entity;
+            this.keys = {
+                "power": {"icon": "mdi:power", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "power"}},
+                "volume_up": {"icon": "mdi:volume-plus", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "volume_up"}},
+                "volume_down": {"icon": "mdi:volume-minus", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "volume_down"}},
+                "volume_mute": {"icon": "mdi:volume-mute", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "volume_mute"}},
+                "return": {"icon": "mdi:arrow-left", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "back"}},
+                "info": {"icon": "mdi:information", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "info"}},
+                "home": {"icon": "mdi:home", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "home"}},
+                "channel_up": {"icon": "mdi:arrow-up", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "channel_up"}},
+                "channel_down": {"icon": "mdi:arrow-down", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "channel_down"}},
+                "up": {"icon": "mdi:chevron-up", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "up"}},
+                "left": {"icon": "mdi:chevron-left", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "left"}},
+                "enter": {"icon": "mdi:checkbox-blank-circle", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "select"}},
+                "right": {"icon": "mdi:chevron-right", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "right"}},
+                "down": {"icon": "mdi:chevron-down", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "down"}},
+                "play": {"icon": "mdi:play-pause", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "play"}},
+            };
+        }
         else {
             this.keys = {
                 "power": {"key": "KEY_POWER", "icon": "mdi:power"},
