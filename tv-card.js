@@ -122,7 +122,7 @@ class TVCardServices extends LitElement {
                 "right": {"icon": "mdi:chevron-right", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "right"}},
                 "down": {"icon": "mdi:chevron-down", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "down"}},
                 "rewind": {"icon": "mdi:rewind", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "reverse"}},
-                "play": {"icon": "mdi:play", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "play"}},
+                "play": {"icon": "mdi:play-pause", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "play"}},
                 "fast_forward": {"icon": "mdi:fast-forward", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "forward"}},
             };
         }
