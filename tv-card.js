@@ -112,7 +112,7 @@ class TVCardServices extends LitElement {
                 "volume_down": {"icon": "mdi:volume-minus", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "volume_down"}},
                 "volume_mute": {"icon": "mdi:volume-mute", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "volume_mute"}},
                 "return": {"icon": "mdi:arrow-left", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "back"}},
-                "info": {"icon": "mdi:information", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "info"}},
+                "info": {"icon": "mdi:asterisk", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "info"}},
                 "home": {"icon": "mdi:home", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "home"}},
                 "channel_up": {"icon": "mdi:arrow-up", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "channel_up"}},
                 "channel_down": {"icon": "mdi:arrow-down", "service": "service.send_command", "service_data": { "entity_id": remote_entity, "command": "channel_down"}},
