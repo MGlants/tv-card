@@ -7,9 +7,6 @@ const sources = {
     "spotify": {"source": "Spotify", "icon": "mdi:spotify"},
     "youtube": {"source": "YouTube", "icon": "mdi:youtube"},
 };
-var custom_keys = {};
-var custom_sources = {};
-var custom_icons = {};
 
 var fireEvent = function(node, type, detail, options) {
     options = options || {};
@@ -22,12 +19,20 @@ var fireEvent = function(node, type, detail, options) {
     return event;
 };
 
-var holdtimer = null;
-var holdaction = null;
-var holdinterval = null;
-var timer = null;
-
 class TVCardServices extends LitElement {
+    constructor() {
+        super();
+
+        this.custom_keys = {};
+        this.custom_sources = {};
+        this.custom_icons = {};
+
+        this.holdtimer = null;
+        this.holdaction = null;
+        this.holdinterval = null;
+        this.timer = null;
+    }
+
     static get properties() {
         return {
             _hass: {},
@@ -51,13 +56,11 @@ class TVCardServices extends LitElement {
             return;
         }
         if (!config.platform) {
-            console.log("Invalid cconfiguration platform");
+            console.log("Invalid configuration platform");
             return;
         }
         this._config = { theme: "default", ...config };
-        custom_keys = config.custom_keys || {};
-        custom_sources = config.custom_sources || {};
-        custom_icons = config.custom_icons || {};
+
         if (config.platform === "androidtv" ) {
             this.keys = {
                 "power": {"key": "POWER", "icon": "mdi:power"},
@@ -149,6 +152,11 @@ class TVCardServices extends LitElement {
                 "fast_forward": {"key": "KEY_FF", "icon": "mdi:fast-forward"},
             };
         }
+
+        this.custom_keys = config.custom_keys || {};
+        this.custom_sources = config.custom_sources || {};
+        this.custom_icons = config.custom_icons || {};
+        
         this.loadCardHelpers();
         this.renderVolumeSlider();
     }
@@ -248,7 +256,7 @@ class TVCardServices extends LitElement {
             if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
         };  
         if (this._config.enable_double_click) {
-            timer = setTimeout(click_action, 200);
+            this.timer = setTimeout(click_action, 200);
         } else {
             click_action();
         }
@@ -259,8 +267,8 @@ class TVCardServices extends LitElement {
 
         event.stopImmediatePropagation();
 
-        clearTimeout(timer);
-        timer = null;
+        clearTimeout(this.timer);
+        this.timer = null;
 
         this.sendKey(this._config.double_click_keycode ? this._config.double_click_keycode : this.keys.return.key);
         if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "success");
@@ -269,11 +277,12 @@ class TVCardServices extends LitElement {
     onTouchStart(event) {
         event.stopImmediatePropagation();
 
-        holdaction = this.keys.enter.key;
-        holdtimer = setTimeout(() => {
+        this.holdaction = this.keys.enter.key;
+        this.holdtimer = setTimeout(() => {
+
             //hold
-            holdinterval = setInterval(() => {
-                this.sendKey(holdaction);
+            this.holdinterval = setInterval(() => {
+                this.sendKey(this.holdaction);
                 if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
             }, 200);
         }, 700);
@@ -282,14 +291,14 @@ class TVCardServices extends LitElement {
     }
 
     onTouchEnd(event) {
-        clearTimeout(timer);
-        clearTimeout(holdtimer);
-        clearInterval(holdinterval);
+        clearTimeout(this.timer);
+        clearTimeout(this.holdtimer);
+        clearInterval(this.holdinterval);
 
-        holdtimer = null;
-        timer = null;
-        holdinterval = null;
-        holdaction = null;
+        this.holdtimer = null;
+        this.timer = null;
+        this.holdinterval = null;
+        this.holdaction = null;
     }
 
     onTouchMove(event) {
@@ -305,13 +314,15 @@ class TVCardServices extends LitElement {
 
         if (Math.abs(diffX) > Math.abs(diffY)) {
             // sliding horizontally
+
             let key = diffX > 0 ? this.keys.left.key : this.keys.right.key;
-            holdaction = key;
+            this.holdaction = key;
             this.sendKey(key);
         } else {
             // sliding vertically
             let key = diffY > 0 ? this.keys.up.key : this.keys.down.key;
-            holdaction = key;
+            this.holdaction = key;
+
             this.sendKey(key);
         }
 
@@ -322,7 +333,8 @@ class TVCardServices extends LitElement {
 
     handleActionClick(e) {
         let action = e.currentTarget.action;
-        let info = custom_keys[action] || custom_sources[action] || this.keys[action] || sources[action];
+
+        let info = this.custom_keys[action] || this.custom_sources[action] || this.keys[action] || sources[action];
 
         if (info.key) {
             this.sendKey(info.key);
@@ -339,9 +351,10 @@ class TVCardServices extends LitElement {
     }
 
     buildIconButton(action) {
-        let button_info = custom_keys[action] || custom_sources[action] || this.keys[action] || sources[action] || {};
+        let button_info = this.custom_keys[action] || this.custom_sources[action] || this.keys[action] || sources[action] || {};
+
         let icon = button_info.icon;
-        let custom_svg_path = custom_icons[icon];
+        let custom_svg_path = this.custom_icons[icon];
 
         return html`
             <ha-icon-button
